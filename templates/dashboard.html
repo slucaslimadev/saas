@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <i class="bi bi-tools"></i>
+            <h3 class="count">{{ em_servico }}</h3>
+            <p class="mb-0">Veículos em Serviço</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <i class="bi bi-check-circle"></i>
+            <h3 class="count">{{ finalizados }}</h3>
+            <p class="mb-0">Serviços Finalizados</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <i class="bi bi-currency-dollar"></i>
+            <h3 class="count">R$ {{ "%.2f"|format(receita) }}</h3>
+            <p class="mb-0">Receita Total</p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Últimos Veículos</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Veículo</th>
+                                <th>Placa</th>
+                                <th>Entrada</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for veiculo in veiculos %}
+                            <tr>
+                                <td>{{ veiculo['nome_carro'] }}</td>
+                                <td>{{ veiculo['placa'] }}</td>
+                                <td>{{ veiculo['data_entrada'] }}</td>
+                                <td>
+                                    {% if veiculo['status'] == 'EM SERVIÇO' %}
+                                        <span class="badge bg-warning">{{ veiculo['status'] }}</span>
+                                    {% else %}
+                                        <span class="badge bg-primary">{{ veiculo['status'] }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('entrada') }}" class="btn btn-primary w-100 mb-3">
+                    <i class="bi bi-plus-circle"></i> Registrar Entrada
+                </a>
+                <a href="{{ url_for('relatorio') }}" class="btn btn-secondary w-100 mb-3">
+                    <i class="bi bi-list-check"></i> Ver Veículos
+                </a>
+                <a href="{{ url_for('historico') }}" class="btn btn-info w-100 text-white">
+                    <i class="bi bi-clock-history"></i> Ver Histórico
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gráfico de Receita
+    const receitaCtx = document.getElementById('receitaChart');
+    if (receitaCtx && {{ meses|tojson|safe }} && {{ valores_receita|tojson|safe }}) {
+        new Chart(receitaCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ meses|tojson|safe }},
+                datasets: [{
+                    label: 'Receita (R$)',
+                    data: {{ valores_receita|tojson|safe }},
+                    backgroundColor: '#fb7b32',
+                    borderColor: '#093818',
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Tipos
+    const tiposCtx = document.getElementById('tipoVeiculosChart');
+    if (tiposCtx && {{ tipos_veiculos|tojson|safe }} && {{ quantidades_tipos|tojson|safe }}) {
+        new Chart(tiposCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ tipos_veiculos|tojson|safe }},
+                datasets: [{
+                    data: {{ quantidades_tipos|tojson|safe }},
+                    backgroundColor: [
+                        '#093818', '#fb7b32', '#0d6efd', '#6c757d', '#20c997'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mt-4">
+    <!-- Logo da Empresa -->
+    <div class="mb-4">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             alt="JyM Lanternagem e Pintura" 
+             style="height: 120px; max-width: 100%; object-fit: contain;">
+    </div>
+
+    <div class="card mx-auto" style="max-width: 600px; border-left: 4px solid #fb7b32;">
+        <div class="card-header text-white" style="background-color: #093818;">
+            <h3 class="mb-0">Controle de Veículos</h3>
+        </div>
+        <div class="card-body">
+            <div class="d-grid gap-3">
+                <a href="{{ url_for('entrada') }}" class="btn btn-lg py-3 text-white" style="background-color: #093818;">
+                    <i class="bi bi-car-front-fill me-2"></i>Registrar Entrada
+                </a>
+                <a href="{{ url_for('relatorio') }}" class="btn btn-lg py-3 text-white" style="background-color: #fb7b32;">
+                    <i class="bi bi-list-check me-2"></i>Veículos em Serviço
+                </a>
+                <a href="{{ url_for('historico') }}" class="btn btn-lg py-3 text-white" style="background-color: #093818;">
+                    <i class="bi bi-clock-history me-2"></i>Histórico Completo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Efeitos de hover personalizados */
+    .btn[style*="background-color: #093818"]:hover {
+        background-color: #072c14 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn[style*="background-color: #fb7b32"]:hover {
+        background-color: #e06d2a !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Animação suave para a logo */
+    .mb-4 img {
+        transition: transform 0.3s ease;
+    }
+    .mb-4 img:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}

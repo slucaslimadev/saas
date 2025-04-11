@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Histórico Completo</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('exportar_historico') }}" class="btn btn-success me-2">
+            <i class="bi bi-file-earmark-excel"></i> Exportar CSV
+        </a>
+        <div class="btn-group me-2">
+            <a href="{{ url_for('relatorio') }}" class="btn btn-info">
+                <i class="bi bi-list-check"></i> Em Serviço
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Data Entrada</th>
+                        <th>Data Saída</th>
+                        <th>Veículo</th>
+                        <th>Placa</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for veiculo in veiculos %}
+                    <tr>
+                        <td>{{ veiculo[1] }}</td>
+                        <td>{{ veiculo[9] if veiculo[9] else '-' }}</td>
+                        <td>{{ veiculo[2] }}</td>
+                        <td>{{ veiculo[3] }}</td>
+                        <td>{{ veiculo[5] }}</td>
+                        <td>R$ {{ "%.2f"|format(veiculo[4]) }}</td>
+                        <td>
+                            {% if veiculo[10] == 'EM SERVIÇO' %}
+                                <span class="badge bg-warning text-dark">{{ veiculo[10] }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ veiculo[10] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" title="Excluir" 
+                                    onclick="confirmarExclusao({{ veiculo[0] }})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmarExclusao(id) {
+        if (confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
+            window.location.href = `/excluir/${id}`;
+        }
+    }
+</script>
+{% endblock %}

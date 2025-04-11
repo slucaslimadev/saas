@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Registrar Saída de Veículo</h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Confirmar Saída</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Data de Saída</label>
+                <input type="datetime-local" name="data_saida" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Observação Final</label>
+                <textarea name="observacao_final" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('relatorio') }}" class="btn btn-secondary me-md-2">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Confirmar Saída
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

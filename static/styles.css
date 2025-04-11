@@ -1,0 +1,20 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.card {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+    border-radius: 1rem;
+}
+
+.btn i {
+    margin-right: 4px;
+}
+
+footer {
+    font-size: 0.9rem;
+}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Veículos em Serviço</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('entrada') }}" class="btn btn-secondary me-2">
+            <i class="bi bi-plus-circle"></i> Nova Entrada
+        </a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Data Entrada</th>
+                        <th>Veículo</th>
+                        <th>Placa</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Pagamento</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for veiculo in veiculos %}
+                    <tr>
+                        <td>{{ veiculo[1] }}</td>
+                        <td>{{ veiculo[2] }}</td>
+                        <td>{{ veiculo[3] }}</td>
+                        <td>{{ veiculo[5] }}</td>
+                        <td>R$ {{ "%.2f"|format(veiculo[4]) }}</td>
+                        <td>
+                            {% if veiculo.status_pagamento == 'pago' %}
+                                <span class="badge bg-success">Pago</span>
+                            {% elif veiculo.status_pagamento == 'parcial' %}
+                                <span class="badge bg-warning text-dark">Parcialmente Pago</span>
+                            {% else %}
+                                <span class="badge bg-danger">Não Pago</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">{{ veiculo[10] }}</span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('saida', veiculo_id=veiculo[0]) }}" class="btn btn-sm btn-secondary" title="Registrar Saída">
+                                    <i class="bi bi-check-circle"></i>
+                                </a>
+                                <a href="{{ url_for('editar', veiculo_id=veiculo[0]) }}" class="btn btn-sm btn-primary" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-sm btn-danger" title="Excluir" onclick="confirmarExclusao({{ veiculo[0] }})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmarExclusao(veiculoId) {
+    if (confirm('Tem certeza que deseja excluir este veículo? Esta ação não pode ser desfeita.')) {
+        window.location.href = "{{ url_for('excluir', veiculo_id=0) }}".replace('0', veiculoId);
+    }
+}
+</script>
+{% endblock %}
